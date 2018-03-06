@@ -4,7 +4,6 @@ from flask import request
 import json
 
 from flask import Flask, Response, jsonify
-#import json
 
 class JSONResponse(Response):
     def __init__(self, response=None, status=None, headers=None, mimetype=None, content_type=None, direct_passthrough=False):
@@ -19,8 +18,9 @@ class JSONResponse(Response):
             response = jsonify( {'Content' : response} )
         return super(JSONResponse, cls).force_type(response, environ)
 
-my_service = Flask(__name__)
+my_service = Flask(__name__, specification_dir='swagger/)
 my_service.response_class=JSONResponse
+my_service.add_api('my_api.yaml')
 
 @my_service.route('/', methods=['GET', 'POST'])
 def index():
