@@ -1,9 +1,9 @@
+__version__="0.0.1"
+
 from setuptools import setup, find_packages
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
-
-__version__ = "0.0.1"
 
 setup(
     author='Jeff Wang',
