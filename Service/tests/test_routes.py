@@ -30,3 +30,11 @@ class TestRoutes(TestCase):
             resp = routes.my_service.make_response(resp)
             self.assertEqual(200, resp.status_code)
             self.assertIsNotNone(re.search("Hello, " + username + "!", str(resp.data)))
+
+
+    def test_metrics(self):
+        with routes.my_service.test_client() as client:
+            resp = client.get('/metrics')
+            self.assertEqual(200, resp.status_code)
+            self.assertTrue(resp.content_type.startswith('text/plain'))
+            self.assertIsNotNone(re.search("request_latency_seconds", str(resp.data)))

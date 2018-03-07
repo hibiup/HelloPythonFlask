@@ -1,2 +1,3 @@
 # List dependencies below
 flask
+prometheus_client
