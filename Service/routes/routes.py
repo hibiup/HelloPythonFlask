@@ -18,9 +18,8 @@ class JSONResponse(Response):
             response = jsonify( {'Content' : response} )
         return super(JSONResponse, cls).force_type(response, environ)
 
-my_service = Flask(__name__, specification_dir='swagger/)
+my_service = Flask(__name__)
 my_service.response_class=JSONResponse
-my_service.add_api('my_api.yaml')
 
 @my_service.route('/', methods=['GET', 'POST'])
 def index():
