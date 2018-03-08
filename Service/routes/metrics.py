@@ -7,28 +7,37 @@ REGISTRY = CollectorRegistry(auto_describe=False)
 FLASK_REQUEST_LATENCY = Histogram('request_latency_seconds', 'Flask Request Latency', registry=REGISTRY)
 FLASK_REQUEST_COUNT = Counter("requests_total", "Total count of requests", registry=REGISTRY)
 
-import os, time
-from flask import Response, request
-from routes.ws_server import my_service
 
+import os, time
+from routes.ws_server import my_service
+from flask import Response, request
 @my_service.route("/metrics")
 def metrics():
     text = "# Process in {0}\n".format(os.getpid())
     return Response(text + prometheus_client.generate_latest(REGISTRY).decode(), mimetype="text/plain")
 
 
-from flask import Response, request
-def before_request():
-    if request.path != "/metrics":
-        request.start_time = time.time()
-    else:
-        request.start_time = 0
+# 定义一个装饰器来过滤不需要监控的 URL，分别修饰在 before_request 和 after_request 两个函数上
+# 如果装饰器发现访问的路径是需要忽略的，则返回一个 doNothing() 函数替代 before 和 after，这样就不会触发指标记录器。
+_skip_metrics_pathes_=["/metrics"]
+def be_awared_skip_metrics(func):
+    def wrapper(*args, **kwargs):
+        if (request.path in _skip_metrics_pathes_):
+            def doNothing(args=None): return args
+            return doNothing(*args, **kwargs)
+        else:
+            return func(*args, **kwargs)
+    return wrapper
 
+@be_awared_skip_metrics
+def before_request():
+    request.start_time = time.time()
+
+@be_awared_skip_metrics
 def after_request(response):
-    if request.start_time != 0:
-        request_latency = time.time() - request.start_time
-        FLASK_REQUEST_LATENCY.observe(request_latency)
-        FLASK_REQUEST_COUNT.inc()
+    request_latency = time.time() - request.start_time
+    FLASK_REQUEST_LATENCY.observe(request_latency)
+    FLASK_REQUEST_COUNT.inc()
     return response
 
 my_service.before_request(before_request)
