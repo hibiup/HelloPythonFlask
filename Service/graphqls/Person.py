@@ -34,6 +34,7 @@ p3.name = 'Bob'
 
 all_persons = [p1, p2, p3]
 
+from graphql import GraphQLError
 # 1.1 Define mutation class for update operation
 class CreatePersonModel(graphene.Mutation, PersonModel):
     # Define accepted arguments
@@ -44,6 +45,9 @@ class CreatePersonModel(graphene.Mutation, PersonModel):
     
     # mutation class must be defined with a mutate() method with above accepted arguments.
     def mutate(self, info, name, age, avatar):
-        newPerson = CreatePersonModel(len(all_persons)+1, name, age, avatar)
-        all_persons.append(newPerson)
-        return newPerson
+        if age >= 0:
+            newPerson = CreatePersonModel(len(all_persons)+1, name, age, avatar)
+            all_persons.append(newPerson)
+            return newPerson
+        else:
+            raise GraphQLError('Invalid age!')
