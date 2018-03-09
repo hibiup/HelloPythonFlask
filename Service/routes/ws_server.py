@@ -1,6 +1,9 @@
 import json
 from flask import Flask, Response, jsonify, request
 
+from graphqls import PersonQueries
+from flask_graphql import GraphQLView
+
 class JSONResponse(Response):
     def __init__(self, response=None, status=None, headers=None, mimetype=None, content_type=None, direct_passthrough=False):
         if isinstance(response, (str, bytes, bytearray)):
@@ -15,4 +18,5 @@ class JSONResponse(Response):
         return super(JSONResponse, cls).force_type(response, environ)
 
 my_service = Flask(__name__)
-my_service.response_class=JSONResponse
+my_service.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=PersonQueries.schema, graphiql=True))
+#my_service.response_class=JSONResponse

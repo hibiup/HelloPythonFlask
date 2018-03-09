@@ -38,3 +38,22 @@ class TestRoutes(TestCase):
             self.assertEqual(200, resp.status_code)
             self.assertTrue(resp.content_type.startswith('text/plain'))
             self.assertIsNotNone(re.search("request_latency_seconds", str(resp.data)))
+
+
+    def test_graphql_for_person(self):
+        from graphqls import PersonQueries
+        query = '''
+            query somebody {
+                person(id:1){
+                    id
+                    name
+                    age
+                    avatar
+                }
+            }
+        '''
+        result = PersonQueries.schema.execute(query)
+        print(result.errors)
+        print(result.data)
+
+
