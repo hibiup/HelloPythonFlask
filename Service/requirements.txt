@@ -3,3 +3,4 @@ flask
 prometheus_client==0.1.1
 graphene>=2.0
 flask_graphql
+Flask-JWT
