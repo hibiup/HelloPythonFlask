@@ -1,4 +1,4 @@
-from .Person import PersonModel, all_persons, CreatePersonModel
+from .Person import all_persons, PersonModel, CreatePersonModel, UpdatePersonModel
 import graphene
 
 
@@ -32,11 +32,12 @@ class PersonQuery(graphene.ObjectType):
 
 # 3. Define mutation query class for Update operation
 #    https://www.howtographql.com/graphql-python/3-mutations/ 
-class CreatePersonMutation(graphene.ObjectType):
+class PersonMutation(graphene.ObjectType):
     # Return field for CreatePersonMutation
-    createdPerson = CreatePersonModel.Field()  # Field() method will triger CreatePersonModel construction
+    createPerson = CreatePersonModel.Field()  # Field() method will triger CreatePersonModel construction
+    updatePerson = UpdatePersonModel.Field()
 
 # 4. Generate Schema
 #   Schema convert internal PersonQuery defination to User interface
 #   Schema must be registered to http interace, such like Flask in this case.(See ws_server.py)
-schema = graphene.Schema(query=PersonQuery, mutation=CreatePersonMutation)
+schema = graphene.Schema(query=PersonQuery, mutation=PersonMutation)

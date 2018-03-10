@@ -44,10 +44,32 @@ class CreatePersonModel(graphene.Mutation, PersonModel):
         avatar = graphene.String()
     
     # mutation class must be defined with a mutate() method with above accepted arguments.
-    def mutate(self, info, name, age, avatar):
+    @staticmethod
+    def mutate(cls, info, name, age, avatar):
         if age >= 0:
             newPerson = CreatePersonModel(len(all_persons)+1, name, age, avatar)
             all_persons.append(newPerson)
             return newPerson
         else:
             raise GraphQLError('Invalid age!')
+
+
+class UpdatePersonModel(graphene.Mutation, PersonModel):
+    # Define accepted arguments
+    class Arguments:
+        id = graphene.Int()
+        age = graphene.Int()
+        name = graphene.String()
+        avatar = graphene.String()
+
+    # mutation class must be defined with a mutate() method with above accepted arguments.
+    @staticmethod
+    def mutate(cls, info, id, name, age, avatar):
+        if id <= len(all_persons) and id > 0:
+            person = all_persons[id]
+            person.name = name
+            person.age = age
+            person.avatar = avatar
+            return person
+        else:
+            raise GraphQLError('Invalid person ID!')

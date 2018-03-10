@@ -26,22 +26,29 @@ class TestRoutes(TestCase):
     
     def test_graphql_for_person_creation(self):
         import json
-        expected_response = '{"data":{"createdPerson":{"id":4,"name":"Newbeen","age":1.0}}}'
+        expected_response = '{"data":{"createPerson":{"id":4,"name":"Newbeen","age":1.0}}}'
         with routes.my_service.test_client() as client:
-            response = client.post("/graphql?query=mutation { createdPerson(name: \"Newbeen\", age: 1, avatar: \"\"){ id\nname\nage } }")
+            response = client.post("/graphql?query=mutation { createPerson(name: \"Newbeen\", age: 1, avatar: \"\"){ id\nname\nage } }")
             print(response.data)
             assert json.loads(response.data) == json.loads(expected_response)
 
     def test_graphql_person_creation_with_invalid_method(self):
         expected_response = 'Can only perform a mutation operation from a POST request.'
         with routes.my_service.test_client() as client:
-            response = client.get("/graphql?query=mutation { createdPerson(name: \"Newbeen\", age: 1, avatar: \"\"){ id\nname\nage } }")
+            response = client.get("/graphql?query=mutation { createPerson(name: \"Newbeen\", age: 1, avatar: \"\"){ id\nname\nage } }")
             print(response.data)
             assert str(response.data).__contains__(expected_response)
 
     def test_graphql_person_creation_with_invalid_age(self):
         expected_response = 'Invalid age!'
         with routes.my_service.test_client() as client:
-            response = client.post("/graphql?query=mutation { createdPerson(name: \"Newbeen\", age: -1, avatar: \"\"){ id\nname\nage } }")
+            response = client.post("/graphql?query=mutation { createPerson(name: \"Newbeen\", age: -1, avatar: \"\"){ id\nname\nage } }")
+            print(response.data)
+            assert str(response.data).__contains__(expected_response)
+
+    def test_graphql_person_update(self):
+        expected_response = '{"data":{"updatePerson":{"id":2,"name":"new name","age":100.0,"avatar":""}}}'
+        with routes.my_service.test_client() as client:
+            response = client.post("/graphql?query=mutation { updatePerson(id: 1, name: \"new name\", age: 100, avatar: \"\"){ id\nname\nage\navatar } }")
             print(response.data)
             assert str(response.data).__contains__(expected_response)
