@@ -1,7 +1,10 @@
-<<<<<<< HEAD:Service/routers/routers.py
+#from routes import my_service
 from domain import hello
-from flask import Flask, Response, jsonify, request
+from flask import request
 import json
+
+from flask import Flask, Response, jsonify
+#import json
 
 class JSONResponse(Response):
     def __init__(self, response=None, status=None, headers=None, mimetype=None, content_type=None, direct_passthrough=False):
@@ -12,27 +15,17 @@ class JSONResponse(Response):
 
     @classmethod
     def force_type(cls, response, environ=None):
-        response = jsonify( {'Content' : response} )
+        if(200 == response.code):
+            response = jsonify( {'Content' : response} )
         return super(JSONResponse, cls).force_type(response, environ)
 
-
-''' 定义 flash app 入口 '''
 my_service = Flask(__name__)
 my_service.response_class=JSONResponse
 
-''' Service routers '''
-@my_service.route('/<string:username>', methods=['GET', 'POST'])
-@my_service.route('/hello/<string:username>', methods=['GET', 'POST'])
-def index(username):
+@my_service.route('/', methods=['GET', 'POST'])
+def index():
+    return "Index"
+
+@my_service.route('/hello/<username>', methods=['GET', 'POST'])
+def greeting(username):
     return hello.greeting(username)
-=======
-''' MicroServices for Hello World functions '''
-
-__version__="0.0.1"
-
-from routes import routes
-
-def start():
-    ''' 定义 flash app 入口 '''
-    routes.my_service.run()
->>>>>>> 49685e626b90ee13e0e399da889ff26736ab7d4a:Service/routes/__init__.py
