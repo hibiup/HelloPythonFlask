@@ -1,4 +1,3 @@
-<<<<<<< HEAD:Service/routers/routers.py
 from domain import hello
 from flask import Flask, Response, jsonify, request
 import json
@@ -25,14 +24,3 @@ my_service.response_class=JSONResponse
 @my_service.route('/hello/<string:username>', methods=['GET', 'POST'])
 def index(username):
     return hello.greeting(username)
-=======
-''' MicroServices for Hello World functions '''
-
-__version__="0.0.1"
-
-from routes import routes
-
-def start():
-    ''' 定义 flash app 入口 '''
-    routes.my_service.run()
->>>>>>> 49685e626b90ee13e0e399da889ff26736ab7d4a:Service/routes/__init__.py

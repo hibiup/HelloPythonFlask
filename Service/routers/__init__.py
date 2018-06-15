@@ -4,4 +4,5 @@ __version__="0.0.1"
 
 from .routers import my_service
 
-my_service.run(host='0.0.0.0')
+def start():
+    my_service.run(host='0.0.0.0')
