@@ -1,5 +1,6 @@
-''' Service functions '''
+""" Service functions """
+
 
 def greeting(username):
-    ''' Greeting function '''
+    """ Greeting function """
     return "Hello, " + username + "!"
