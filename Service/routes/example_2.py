@@ -29,7 +29,6 @@ api = Api(flask)
 @api.route('/hello/<string:name>')
 @api.doc(params={'name': 'User name'})
 class HelloWorld(Resource):
-    parser = api.parser()
     """
       函数名代表访问方法，可以接受来自 URL 的参数，URL 参数支持路径(/value1/value2/...)参数和请求参数(?key1=value1&key2=value2...)：
         $ curl -X GET http://localhost:5000/hello/xxx?key=value
