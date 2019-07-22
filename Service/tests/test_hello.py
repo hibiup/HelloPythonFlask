@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from domain import hello
+from ..domain import hello
 
 
 def __random_string__(length=5):

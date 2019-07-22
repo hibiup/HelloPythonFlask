@@ -11,7 +11,7 @@ setup(
 
     version_command='git describe --always --long --dirty=-dev',
 
-    name = "my_microservice",
+    name = "FlaskExample",
     packages = find_packages(
         exclude=['tests', '*.tests', '*.tests.*']
     ),
